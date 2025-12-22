@@ -21,7 +21,7 @@ def delete_old_logs_user(cursor, user_id):
         ORDER BY [入室日時] DESC
     """, (user_id,))
     rows = cursor.fetchall()
-    keep_ids = [row.id for row in rows[:3]]  # 最新3件のIDだけ残す
+    keep_ids = [row["id"] for row in rows[:3]]  # 最新3件のIDだけ残す
 
     if keep_ids:
         placeholders = ",".join("?" for _ in keep_ids)
@@ -39,7 +39,7 @@ def delete_old_logs_user(cursor, user_id):
 def is_duplicate_action(cursor, user_id, action):
     cursor.execute("SELECT status FROM Users WHERE ID = ?", (user_id,))
     result = cursor.fetchone()
-    if result and result.status == action:
+    if result and result["status"] == action:
         return True
     return False
 
@@ -72,27 +72,25 @@ def status_check():
                 error = "ユーザーが見つかりません"
             else:
                 cursor.execute("""
-                    SELECT TOP 1 [入室日時]
-                    FROM Logs
-                    WHERE user_id = ? AND [入室日時] IS NOT NULL
-                    ORDER BY [入室日時] DESC
-                """, (user_id,))
+                SELECT [入室日時] 
+                FROM Logs WHERE user_id = ? AND [入室日時] IS NOT NULL 
+                ORDER BY [入室日時] DESC 
+                LIMIT 1 """, (user_id,))
                 in_row = cursor.fetchone()
                 last_in = in_row[0] if in_row else "---"
 
                 cursor.execute("""
-                    SELECT TOP 1 [退室日時]
-                    FROM Logs
-                    WHERE user_id = ? AND [退室日時] IS NOT NULL
-                    ORDER BY [退室日時] DESC
-                """, (user_id,))
+                SELECT [退室日時] 
+                FROM Logs WHERE user_id = ? AND [退室日時] IS NOT NULL 
+                ORDER BY [退室日時] DESC 
+                LIMIT 1 """, (user_id,))
                 out_row = cursor.fetchone()
                 last_out = out_row[0] if out_row else "---"
 
                 result = {
-                    "id": user.id,
-                    "name": user.name,
-                    "status": 1 if user.status == "in" else 2,
+                    "id": user["id"],
+                    "name": user["name"],
+                    "status": 1 if user["status"] == "in" else 2,
                     "last_in": last_in,
                     "last_out": last_out
                 }
@@ -121,8 +119,8 @@ def qr_entry():
             conn.close()
             return jsonify({"error": "IDが見つかりませんでした"}), 404
 
-        name = user.name
-        current_status = user.status or "out"
+        name = user["name"]
+        current_status = user["status"] or "out"
         new_status = "out" if current_status == "in" else "in"
 
         cursor.execute("UPDATE Users SET status = ? WHERE ID = ?", (new_status, user_id))
@@ -147,7 +145,7 @@ def qr_entry():
             if row:
                 cursor.execute(
                     "UPDATE Logs SET [退室日時] = ? WHERE id = ?",
-                    (now, row.id)
+                    (now, row["id"])
                 )
             else:
                 # 念のため、退室だけのログを追加（想定外のケース）
@@ -188,7 +186,7 @@ def manual_entry():
             conn.close()
             return jsonify({"error": "IDが見つかりませんでした。"}), 404
 
-        name = user.name  # ← ここで名前を取得！
+        name = user["name"]  # ← ここで名前を取得！
 
         if is_duplicate_action(cursor, user_id, action): 
             conn.close()
@@ -217,7 +215,7 @@ def manual_entry():
             row = cursor.fetchone()
 
             if row:
-                log_id = row.id
+                log_id = row["id"]
                 cursor.execute(
                     "UPDATE Logs SET [退室日時] = ? WHERE id = ?",
                     (now, log_id)

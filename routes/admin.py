@@ -34,7 +34,7 @@ def admin_login():
             if not admin:
                 error = "管理者IDが見つかりません"
             else:
-                if str(admin.password).strip() != password:
+                if str(admin["password"]).strip() != password:
                     print("パスワードが一致しません")
                     error = "パスワードが正しくありません"
                 else:

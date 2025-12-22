@@ -1,5 +1,5 @@
 import configparser
-import pyodbc
+import sqlite3
 import os
 
 def get_db_connection():
@@ -7,17 +7,10 @@ def get_db_connection():
     config = configparser.ConfigParser()
     config.read("config.ini")
 
-    db_path = config["DB"].get("path", "db/Users.accdb")
+    db_path = config["DB"].get("path", "db/Users.sqlite") 
     abs_path = os.path.abspath(db_path)
 
-    conn_str = (
-        r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};"
-        f"DBQ={abs_path};"
-    )
-
-    conn = pyodbc.connect(conn_str)
-    conn.setdecoding(pyodbc.SQL_CHAR, encoding='cp932')
-    conn.setdecoding(pyodbc.SQL_WCHAR, encoding='cp932')
-    conn.setencoding(encoding='cp932')
+    conn = sqlite3.connect(abs_path)
+    conn.row_factory = sqlite3.Row
 
     return conn
