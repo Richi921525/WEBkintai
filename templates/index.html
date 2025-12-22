@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>入退室管理システム</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body class="index-page"
+      data-api-url="{{ api_url }}"
+      style="background-image: url('{{ url_for('static', filename=background_image) }}');">
+  <h1>入退室管理システム</h1>
+
+  <div id="result">ユーザIDを入力してください</div>
+
+  <div id="preview" style="display: none;"></div>
+
+  <div id="camera-controls" style="display: none;">
+    <button id="stop-scan">カメラ停止</button>
+  </div>
+
+  <div class="status-check-link">
+    <a href="{{ url_for('main.status_check') }}">▶ 入退室履歴を見る</a>
+  </div>
+
+  <input type="text" id="manual-id" placeholder="ユーザIDを入力" autocomplete="off">
+  <button id="entry-button">入室</button>
+  <button id="exit-button">退室</button>
+  <br><br>
+  <button id="start-scan">QRコードでログイン</button>
+  <br><br>
+  <div class="admin-link">
+    <a href="{{ url_for('admin.admin_login') }}">▶ 管理者ログイン</a>
+  </div>
+</body>
+</html>

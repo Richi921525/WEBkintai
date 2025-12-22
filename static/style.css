@@ -1,0 +1,135 @@
+/* index.html 用のスタイル */
+body.index-page {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.index-page {
+  font-family: sans-serif;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.index-page input {
+  padding: 8px;
+  margin: 10px;
+  font-size: 1em;
+}
+
+.index-page button {
+  padding: 10px 20px;
+  font-size: 1em;
+  margin: 5px;
+  cursor: pointer;
+}
+
+#index-page #result {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+#preview {
+  width: 320px;
+  height: 320px;
+  margin: 0 auto;
+  border: 2px solid #ccc;
+}
+
+#preview video {
+  transform: scaleX(-1);
+}
+
+/* 管理者画面・ログイン画面は最低限のスタイルにしておく */
+.admin-login-page,
+.admin-page {
+  font-family: sans-serif;
+  padding: 40px;
+  text-align: center;
+}
+
+.admin-login-page input,
+.admin-page input {
+  padding: 8px;
+  margin: 10px;
+  font-size: 1em;
+}
+
+.admin-login-page button,
+.admin-page button {
+  padding: 10px 20px;
+  font-size: 1em;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+  background-color: #ffe0e0;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.message {
+  color: green;
+  margin-top: 10px;
+  font-weight: bold;
+  background-color: #e0ffe0;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.back-button {
+  margin-top: 30px;
+}
+
+/* status_check.html 用のスタイル */
+body.status-page {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: sans-serif;
+  padding: 40px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  min-height: 100vh;
+}
+
+.status-result {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  display: inline-block;
+  text-align: left;
+}
+
+/* 入退室履歴テーブル */
+.log-table {
+  width: 100%;
+  max-width: 800px;
+  margin: 40px auto 0;
+  border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.log-table th,
+.log-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.log-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}

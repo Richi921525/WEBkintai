@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>入退室状況確認</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="status-page" style="background-image: url('{{ url_for('static', filename=background) }}'); background-size: cover;">
+  <h1>入退室状況確認</h1>
+
+  <form method="POST" autocomplete="off">
+    <input type="text" name="id" placeholder="ユーザーIDを入力" required>
+    <button type="submit">検索</button>
+  </form>
+
+  {% if error %}
+    <div class="error" id="status-error">{{ error }}</div>
+    <script>
+      setTimeout(() => {
+        const err = document.getElementById("status-error");
+        if (err) {
+          err.style.transition = "opacity 0.5s";
+          err.style.opacity = 0;
+          setTimeout(() => err.remove(), 500);
+        }
+      }, 10000);
+    </script>
+  {% endif %}
+
+  {% if result %}
+    <div class="status-result">
+      <h2>{{ result.name }} さん（ID: {{ result.id }}）</h2>
+      <p>
+        <strong>現在の状態：</strong>
+        {% if result.status == 1 %}
+          <span style="color: green;">🟢 入室中</span>
+        {% elif result.status == 2 %}
+          <span style="color: red;">🔴 退室済</span>
+        {% else %}
+          不明
+        {% endif %}
+      </p>
+      <p><strong>最終入室：</strong> {{ result.last_in }}</p>
+      <p><strong>最終退室：</strong> {{ result.last_out }}</p>
+    </div>
+  {% endif %}
+
+  <div class="back-button">
+    <a href="{{ url_for('main.index') }}">← トップに戻る</a>
+  </div>
+</body>
+</html>
