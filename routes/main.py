@@ -4,6 +4,7 @@ from utils.database import get_db_connection
 import uuid
 import configparser
 import os
+import pytz
 
 main_bp = Blueprint("main", __name__)
 
@@ -104,8 +105,8 @@ def qr_entry():
     try:
         data = request.get_json()
         user_id = data.get("id")
-        now = datetime.now() 
-        timestamp = now.strftime("[%Y-%m-%d %H:%M:%S]")
+        japan = pytz.timezone('Asia/Tokyo')
+        now_japan = datetime.now(pytz.timezone('Asia/Tokyo'))
 
         if not user_id:
             return jsonify({"error": "IDが送信されていません"}), 400
@@ -125,7 +126,7 @@ def qr_entry():
 
         cursor.execute("UPDATE Users SET status = ? WHERE ID = ?", (new_status, user_id))
 
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        now = now_japan.strftime("%Y-%m-%d %H:%M:%S")
 
         if new_status == "in":
             log_id = str(uuid.uuid4())
@@ -158,7 +159,7 @@ def qr_entry():
         conn.commit()
         conn.close()
 
-        message = f"{timestamp} {name}さんの {'入室' if new_status == 'in' else '退室'} を記録しました"
+        message = f"{now} {name}さんの {'入室' if new_status == 'in' else '退室'} を記録しました"
         return jsonify({"message": message})
 
     except Exception as e:
@@ -171,8 +172,8 @@ def manual_entry():
         data = request.get_json()
         user_id = data.get("id")
         action = data.get("action")
-        now = datetime.now() 
-        timestamp = now.strftime("[%Y-%m-%d %H:%M:%S]")
+        japan = pytz.timezone('Asia/Tokyo')
+        now_japan = datetime.now(pytz.timezone('Asia/Tokyo'))
 
         if not user_id or not action:
             return jsonify({"error": "IDまたはアクションが不足しています。"}), 400
@@ -196,7 +197,7 @@ def manual_entry():
 
         cursor.execute("UPDATE Users SET status = ? WHERE ID = ?", (action, user_id))
 
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        now = now_japan.strftime("%Y-%m-%d %H:%M:%S")
         log_id = str(uuid.uuid4())
 
         if action == "in":
@@ -233,7 +234,7 @@ def manual_entry():
         conn.commit()
         conn.close()
 
-        message = f"{timestamp} {name}さんの {'入室' if action == 'in' else '退室'} を記録しました"
+        message = f"{now} {name}さんの {'入室' if action == 'in' else '退室'} を記録しました"
         return jsonify({"message": message})
 
     except Exception as e:
